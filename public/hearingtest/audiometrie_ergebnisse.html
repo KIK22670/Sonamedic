@@ -297,6 +297,7 @@
         updateChart(filteredTests);
     }
 
+
     // Ergebnisse anzeigen
     function displayResults(tests) {
     testList.innerHTML = '';
@@ -305,7 +306,7 @@
         testList.innerHTML = '<li class="list-group-item">Keine Testergebnisse verfügbar.</li>';
     } else {
         // Sortiere die Tests nach Datum und Uhrzeit (neueste zuerst)
-        const sortedTests = tests.sort((a, b) => 
+        const sortedTests = tests.sort((a, b) =>
             new Date(b.rt_datum + ' ' + b.rt_startzeit) - new Date(a.rt_datum + ' ' + a.rt_startzeit)
         );
         const groupedTests = groupByTestId(sortedTests);
@@ -316,9 +317,15 @@
             const testGroup = groupedTests[testId];
             const listItem = document.createElement('li');
             listItem.className = 'list-group-item result-card';
+
+            // Hole Startzeit und Endzeit
+            const endzeit = new Date(testGroup[0].rt_endzeit);
+            const startzeit = new Date(testGroup[testGroup.length - 1].rt_startzeit);
+
             listItem.innerHTML = `
                 <strong>Test ${testCounter}:</strong> ${new Date(testGroup[0].rt_datum).toLocaleDateString()} <br>
-                <strong>Zeit:</strong> ${new Date(testGroup[0].rt_startzeit).toLocaleTimeString()}<br>
+                <strong>Startzeit:</strong> ${startzeit.toLocaleTimeString()}<br>
+                <strong>Endzeit:</strong> ${endzeit.toLocaleTimeString()}<br>
                 <strong>Testqualität:</strong> ${testGroup[0].quality === 'good' ? 'Gut (≥ 50%)' : 'Schlecht (< 50%)'} <br>
                 <span class="toggle-details" onclick="toggleDetails('${testId}')">Details anzeigen</span>
                 <div id="details-${testId}" class="details-section">
@@ -337,8 +344,6 @@
         });
     }
 }
-
-
 
     // Funktion zum Gruppieren der Tests nach Test-ID
     function groupByTestId(tests) {

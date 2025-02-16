@@ -617,12 +617,12 @@ app.get('/reset-password/:token', async (req, res) => {
 
 // Endpunkt zum Speichern von Reintonaudiometrie-Ergebnissen
 app.post('/saveTestResult', async (req, res) => {
-    const { test_id, testNumber, frequency, result, ear, rt_lautstaerke_db } = req.body; // rt_lautstaerke_db hinzufügen
-    const u_id = req.session.user?.id; // Benutzer-ID aus der Session
+    const { test_id, testNumber, frequency, result, ear, rt_lautstaerke_db } = req.body;
+    const u_id = req.session.user?.id;
 
-    console.log('Session-Daten:', req.session); // Debugging
-    console.log('u_id:', u_id); // Debugging
-    console.log('rt_lautstaerke_db:', rt_lautstaerke_db); // Debugging
+    console.log('Session-Daten:', req.session);
+    console.log('u_id:', u_id);
+    console.log('rt_lautstaerke_db:', rt_lautstaerke_db);
 
     if (!u_id) {
         return res.status(401).json({ error: 'Nicht authentifiziert.' });
@@ -643,46 +643,52 @@ app.post('/saveTestResult', async (req, res) => {
 
         // Falls p_id NULL ist, erstelle einen neuen Patienten und aktualisiere u_p_id
         if (!p_id) {
-            // Setze die Sequenz zurück, um doppelte p_id zu vermeiden
             await client.query(
                 `SELECT setval('p_patienten_p_id_seq', (SELECT MAX(p_id) FROM p_patienten))`
             );
 
-            // Füge einen neuen Patienten hinzu (mit Standardwerten)
             const newPatient = await client.query(
                 `INSERT INTO p_patienten (p_vorname, p_nachname, p_geburtsdatum, p_geschlecht)
                  VALUES ($1, $2, $3, $4)
                  RETURNING p_id`,
-                ['Unbekannt', 'Unbekannt', '2000-01-01', 0] // 0 für "unbekannt"
+                ['Unbekannt', 'Unbekannt', '2000-01-01', 0]
             );
 
             p_id = newPatient.rows[0].p_id;
 
-            // Aktualisiere u_p_id für den Benutzer
             await client.query(
                 'UPDATE u_userverwaltung SET u_p_id = $1 WHERE u_id = $2',
                 [p_id, u_id]
             );
         }
 
-        // Speichere den übergeordneten Test (falls noch nicht vorhanden)
+        // Überprüfe, ob der Test bereits existiert
         const testExists = await client.query(
             'SELECT rt_test_id FROM reintonaudiometrie WHERE rt_test_id = $1 LIMIT 1',
             [test_id]
         );
 
         if (testExists.rows.length === 0) {
+            // Erster Eintrag für diesen Test: Setze Startzeit und Endzeit
             await client.query(
                 `INSERT INTO reintonaudiometrie (rt_test_id, rt_datum, rt_startzeit, rt_endzeit, rt_p_id, rt_frequenz, rt_ohr, rt_lautstaerke_db, rt_gehoert)
                  VALUES ($1, CURRENT_DATE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $2, $3, $4, $5, $6)`,
-                [test_id, p_id, frequency, ear, rt_lautstaerke_db, result] // rt_lautstaerke_db verwenden
+                [test_id, p_id, frequency, ear, rt_lautstaerke_db, result]
             );
         } else {
-            // Falls der Test bereits existiert, speichere nur die Frequenz/Ohr-Kombination
+            // Folge-Einträge für diesen Test: Setze nur die Frequenz/Ohr-Kombination
             await client.query(
                 `INSERT INTO reintonaudiometrie (rt_test_id, rt_datum, rt_startzeit, rt_endzeit, rt_p_id, rt_frequenz, rt_ohr, rt_lautstaerke_db, rt_gehoert)
-                 VALUES ($1, CURRENT_DATE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $2, $3, $4, $5, $6)`,
-                [test_id, p_id, frequency, ear, rt_lautstaerke_db, result] // rt_lautstaerke_db verwenden
+                 VALUES ($1, CURRENT_DATE, (SELECT rt_startzeit FROM reintonaudiometrie WHERE rt_test_id = $1 LIMIT 1), CURRENT_TIMESTAMP, $2, $3, $4, $5, $6)`,
+                [test_id, p_id, frequency, ear, rt_lautstaerke_db, result]
+            );
+
+            // Aktualisiere rt_endzeit für den gesamten Test
+            await client.query(
+                `UPDATE reintonaudiometrie
+                 SET rt_endzeit = CURRENT_TIMESTAMP
+                 WHERE rt_test_id = $1`,
+                [test_id]
             );
         }
 
@@ -692,6 +698,7 @@ app.post('/saveTestResult', async (req, res) => {
         res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
+
 
 // Endpunkt zum Abrufen von Reintonaudiometrie-Ergebnissen
 app.get('/getAudiometrieTests', async (req, res) => {
@@ -716,12 +723,17 @@ app.get('/getAudiometrieTests', async (req, res) => {
 
         // Abrufen der Testergebnisse aus der Tabelle
         const results = await client.query(
-            `SELECT rt_test_id, rt_datum, rt_startzeit, rt_endzeit, rt_frequenz, rt_ohr, rt_lautstaerke_db, rt_gehoert
+            `SELECT rt_test_id, rt_datum, rt_startzeit, rt_endzeit,
+                    EXTRACT(EPOCH FROM (rt_endzeit - rt_startzeit)) AS rt_dauer_sekunden,
+                    rt_frequenz, rt_ohr, rt_lautstaerke_db, rt_gehoert
              FROM reintonaudiometrie
              WHERE rt_p_id = $1
              ORDER BY rt_datum DESC, rt_startzeit DESC`,
             [p_id]
         );
+
+        // Debugging: Überprüfen Sie die Werte
+        console.log('Testergebnisse:', results.rows);
 
         res.json(results.rows);
     } catch (error) {
@@ -729,7 +741,6 @@ app.get('/getAudiometrieTests', async (req, res) => {
         res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
-
 
 //--------------------------------------------------------------
 // Terminverwaltung
