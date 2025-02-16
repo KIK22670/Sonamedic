@@ -1307,7 +1307,7 @@ app.get('/api/check-two-reintonaudiometrie-tests-under-100', async (req, res) =>
             if (allTestsUnder100) {
                 return res.json({
                     alert: true,
-                    message: 'Ihre letzten 2 Reintonaudiometrie-Ergebnisse lagen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.'
+                    message: 'Ihre letzten 2 Reintonaudiometrie-Ergebnisse liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.'
                 });
             }
         }

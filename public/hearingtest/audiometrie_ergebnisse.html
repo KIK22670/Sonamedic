@@ -272,156 +272,163 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const testList = document.getElementById('testList');
-            const filterQuality = document.getElementById('filterQuality');
-            const filterDate = document.getElementById('filterDate');
-            const ctx = document.getElementById('resultsChart').getContext('2d');
+    const testList = document.getElementById('testList');
+    const filterQuality = document.getElementById('filterQuality');
+    const filterDate = document.getElementById('filterDate');
+    const ctx = document.getElementById('resultsChart').getContext('2d');
 
-            let allTests = [];
-            let chart;
+    let allTests = [];
+    let chart;
 
-            // Funktion zum Filtern der Ergebnisse
-            function filterResults() {
-                const selectedQuality = filterQuality.value;
-                const selectedDate = filterDate.value;
+    // Funktion zum Filtern der Ergebnisse
+    function filterResults() {
+        const selectedQuality = filterQuality.value;
+        const selectedDate = filterDate.value;
 
-                const filteredTests = allTests.filter(test => {
-                    const qualityMatch = selectedQuality === 'all' ||
-                        (selectedQuality === 'good' && test.quality === 'good') ||
-                        (selectedQuality === 'bad' && test.quality === 'bad');
-                    const dateMatch = !selectedDate || new Date(test.rt_datum).toISOString().split('T')[0] === selectedDate;
-                    return qualityMatch && dateMatch;
-                });
+        const filteredTests = allTests.filter(test => {
+            const qualityMatch = selectedQuality === 'all' ||
+                (selectedQuality === 'good' && test.quality === 'good') ||
+                (selectedQuality === 'bad' && test.quality === 'bad');
+            const dateMatch = !selectedDate || new Date(test.rt_datum).toISOString().split('T')[0] === selectedDate;
+            return qualityMatch && dateMatch;
+        });
 
-                displayResults(filteredTests);
-                updateChart(filteredTests);
+        displayResults(filteredTests);
+        updateChart(filteredTests);
+    }
+
+    // Ergebnisse anzeigen
+    function displayResults(tests) {
+    testList.innerHTML = '';
+
+    if (tests.length === 0) {
+        testList.innerHTML = '<li class="list-group-item">Keine Testergebnisse verfügbar.</li>';
+    } else {
+        // Sortiere die Tests nach Datum und Uhrzeit (neueste zuerst)
+        const sortedTests = tests.sort((a, b) => 
+            new Date(b.rt_datum + ' ' + b.rt_startzeit) - new Date(a.rt_datum + ' ' + a.rt_startzeit)
+        );
+        const groupedTests = groupByTestId(sortedTests);
+
+        let testCounter = Object.keys(groupedTests).length; // Höchste Nummer für neuesten Test
+
+        Object.keys(groupedTests).forEach(testId => {
+            const testGroup = groupedTests[testId];
+            const listItem = document.createElement('li');
+            listItem.className = 'list-group-item result-card';
+            listItem.innerHTML = `
+                <strong>Test ${testCounter}:</strong> ${new Date(testGroup[0].rt_datum).toLocaleDateString()} <br>
+                <strong>Zeit:</strong> ${new Date(testGroup[0].rt_startzeit).toLocaleTimeString()}<br>
+                <strong>Testqualität:</strong> ${testGroup[0].quality === 'good' ? 'Gut (≥ 50%)' : 'Schlecht (< 50%)'} <br>
+                <span class="toggle-details" onclick="toggleDetails('${testId}')">Details anzeigen</span>
+                <div id="details-${testId}" class="details-section">
+                    ${testGroup.map(test => `
+                        <div class="test-detail">
+                            <p><strong>Frequenz:</strong> ${test.rt_frequenz} Hz</p>
+                            <p><strong>Ohr:</strong> ${test.rt_ohr}</p>
+                            <p><strong>Lautstärke:</strong> ${test.rt_lautstaerke_db} dB</p>
+                            <p><strong>Gehört:</strong> ${test.rt_gehoert ? 'Ja' : 'Nein'}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            testList.appendChild(listItem);
+            testCounter--; // Nächster Test bekommt die nächstniedrigere Nummer
+        });
+    }
+}
+
+
+
+    // Funktion zum Gruppieren der Tests nach Test-ID
+    function groupByTestId(tests) {
+        return tests.reduce((acc, test) => {
+            if (!acc[test.rt_test_id]) {
+                acc[test.rt_test_id] = [];
             }
+            acc[test.rt_test_id].push(test);
+            return acc;
+        }, {});
+    }
 
-            // Ergebnisse anzeigen
-            function displayResults(tests) {
-                testList.innerHTML = '';
+    // Diagramm aktualisieren
+    function updateChart(tests) {
+    if (chart) {
+        chart.destroy(); // Altes Diagramm löschen
+    }
 
-                if (tests.length === 0) {
-                    testList.innerHTML = '<li class="list-group-item">Keine Testergebnisse verfügbar.</li>';
-                } else {
-                    // Sortiere die Tests nach Datum (ältester zuerst)
-                    const sortedTests = tests.sort((a, b) => new Date(a.rt_datum) - new Date(b.rt_datum));
-                    const groupedTests = groupByTestId(sortedTests);
+    const frequencies = [125, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000, 8000, 10000, 12000, 14000];
+    const groupedTests = groupByTestId(tests);
 
-                    let testCounter = 1; // Zähler für Test-Namen
-                    Object.keys(groupedTests).forEach(testId => {
-                        const testGroup = groupedTests[testId];
-                        const listItem = document.createElement('li');
-                        listItem.className = 'list-group-item result-card';
-                        listItem.innerHTML = `
-                            <strong>Test ${testCounter}:</strong> ${new Date(testGroup[0].rt_datum).toLocaleDateString()} <br>
-                            <strong>Zeit:</strong> ${new Date(testGroup[0].rt_startzeit).toLocaleTimeString()} - ${new Date(testGroup[0].rt_endzeit).toLocaleTimeString()} <br>
-                            <strong>Testqualität:</strong> ${testGroup[0].quality === 'good' ? 'Gut (≥ 50%)' : 'Schlecht (< 50%)'} <br>
-                            <span class="toggle-details" onclick="toggleDetails('${testId}')">Details anzeigen</span>
-                            <div id="details-${testId}" class="details-section">
-                                ${testGroup.map(test => `
-                                    <div class="test-detail">
-                                        <p><strong>Frequenz:</strong> ${test.rt_frequenz} Hz</p>
-                                        <p><strong>Ohr:</strong> ${test.rt_ohr}</p>
-                                        <p><strong>Lautstärke:</strong> ${test.rt_lautstaerke_db} dB</p>
-                                        <p><strong>Gehört:</strong> ${test.rt_gehoert ? 'Ja' : 'Nein'}</p>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        `;
-                        testList.appendChild(listItem);
-                        testCounter++; // Inkrementiere den Test-Zähler
-                    });
-                }
-            }
+    let testCounter = Object.keys(groupedTests).length; // Höchste Nummer für neuesten Test
 
-            // Funktion zum Gruppieren der Tests nach Test-ID
-            function groupByTestId(tests) {
-                return tests.reduce((acc, test) => {
-                    if (!acc[test.rt_test_id]) {
-                        acc[test.rt_test_id] = [];
-                    }
-                    acc[test.rt_test_id].push(test);
-                    return acc;
-                }, {});
-            }
+    const datasets = Object.keys(groupedTests).map(testId => {
+        const testGroup = groupedTests[testId];
+        const data = frequencies.map(freq => {
+            const test = testGroup.find(t => t.rt_frequenz === freq);
+            return test ? (test.rt_gehoert ? 1 : 0) : null;
+        });
 
-            // Funktion zum Ein- und Ausblenden der Details
-            window.toggleDetails = function (testId) {
-                const detailsSection = document.getElementById(`details-${testId}`);
-                detailsSection.classList.toggle('active');
-            };
+        const dataset = {
+            label: `Test ${testCounter}`, // Korrekte Nummerierung im Diagramm
+            data: data,
+            borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // Zufällige Farbe
+            fill: false,
+        };
 
-            // Diagramm aktualisieren
-            function updateChart(tests) {
-                if (chart) {
-                    chart.destroy(); // Altes Diagramm löschen
-                }
+        testCounter--; // Nächster Test bekommt die nächstniedrigere Nummer
+        return dataset;
+    });
 
-                const frequencies = [125, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000, 8000, 10000, 12000, 14000];
-                const groupedTests = groupByTestId(tests);
-
-                const datasets = Object.keys(groupedTests).map(testId => {
-                    const testGroup = groupedTests[testId];
-                    const data = frequencies.map(freq => {
-                        const test = testGroup.find(t => t.rt_frequenz === freq);
-                        return test ? (test.rt_gehoert ? 1 : 0) : null;
-                    });
-                    return {
-                        label: `Test ${testId}`,
-                        data: data,
-                        borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // Zufällige Farbe
-                        fill: false,
-                    };
-                });
-
-                chart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: frequencies,
-                        datasets: datasets,
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false, // Diagramm passt sich der Container-Größe an
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 1,
-                                    callback: function (value) {
-                                        return value === 1 ? 'Gehört' : 'Nicht gehört';
-                                    }
-                                }
-                            }
+    chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: frequencies,
+            datasets: datasets,
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        callback: function (value) {
+                            return value === 1 ? 'Gehört' : 'Nicht gehört';
                         }
                     }
-                });
+                }
             }
+        }
+    });
+}
 
-            // Ergebnisse vom Server abrufen
-            fetch('/getAudiometrieTests')
-                .then(response => {
-                    if (!response.ok) throw new Error('Fehler beim Abrufen der Testergebnisse');
-                    return response.json();
-                })
-                .then(tests => {
-                    // Berechne die Testqualität für jeden Test
-                    const groupedTests = groupByTestId(tests);
-                    allTests = Object.keys(groupedTests).flatMap(testId => {
-                        const testGroup = groupedTests[testId];
-                        const heardCount = testGroup.filter(test => test.rt_gehoert).length;
-                        const quality = (heardCount / testGroup.length) >= 0.5 ? 'good' : 'bad';
-                        return testGroup.map(test => ({ ...test, quality }));
-                    });
-                    filterResults();
-                })
-                .catch(error => console.error('Fehler:', error));
 
-            // Filter-Event-Listener
-            filterQuality.addEventListener('change', filterResults);
-            filterDate.addEventListener('change', filterResults);
-        });
+    // Ergebnisse vom Server abrufen
+    fetch('/getAudiometrieTests') // Hier die URL zu deiner API oder Datenbank einfügen
+        .then(response => {
+            if (!response.ok) throw new Error('Fehler beim Abrufen der Testergebnisse');
+            return response.json();
+        })
+        .then(tests => {
+            // Berechne die Testqualität für jeden Test
+            const groupedTests = groupByTestId(tests);
+            allTests = Object.keys(groupedTests).flatMap(testId => {
+                const testGroup = groupedTests[testId];
+                const heardCount = testGroup.filter(test => test.rt_gehoert).length;
+                const quality = (heardCount / testGroup.length) >= 0.5 ? 'good' : 'bad';
+                return testGroup.map(test => ({ ...test, quality }));
+            });
+            filterResults();
+        })
+        .catch(error => console.error('Fehler:', error));
+
+    // Filter-Event-Listener
+    filterQuality.addEventListener('change', filterResults);
+    filterDate.addEventListener('change', filterResults);
+});
+
     </script>
 </body>
 
