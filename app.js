@@ -617,11 +617,12 @@ app.get('/reset-password/:token', async (req, res) => {
 
 // Endpunkt zum Speichern von Reintonaudiometrie-Ergebnissen
 app.post('/saveTestResult', async (req, res) => {
-    const { test_id, testNumber, frequency, result, ear } = req.body;
+    const { test_id, testNumber, frequency, result, ear, rt_lautstaerke_db } = req.body; // rt_lautstaerke_db hinzufügen
     const u_id = req.session.user?.id; // Benutzer-ID aus der Session
 
     console.log('Session-Daten:', req.session); // Debugging
     console.log('u_id:', u_id); // Debugging
+    console.log('rt_lautstaerke_db:', rt_lautstaerke_db); // Debugging
 
     if (!u_id) {
         return res.status(401).json({ error: 'Nicht authentifiziert.' });
@@ -674,14 +675,14 @@ app.post('/saveTestResult', async (req, res) => {
             await client.query(
                 `INSERT INTO reintonaudiometrie (rt_test_id, rt_datum, rt_startzeit, rt_endzeit, rt_p_id, rt_frequenz, rt_ohr, rt_lautstaerke_db, rt_gehoert)
                  VALUES ($1, CURRENT_DATE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $2, $3, $4, $5, $6)`,
-                [test_id, p_id, frequency, ear, 50.0, result]
+                [test_id, p_id, frequency, ear, rt_lautstaerke_db, result] // rt_lautstaerke_db verwenden
             );
         } else {
             // Falls der Test bereits existiert, speichere nur die Frequenz/Ohr-Kombination
             await client.query(
                 `INSERT INTO reintonaudiometrie (rt_test_id, rt_datum, rt_startzeit, rt_endzeit, rt_p_id, rt_frequenz, rt_ohr, rt_lautstaerke_db, rt_gehoert)
                  VALUES ($1, CURRENT_DATE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $2, $3, $4, $5, $6)`,
-                [test_id, p_id, frequency, ear, 50.0, result]
+                [test_id, p_id, frequency, ear, rt_lautstaerke_db, result] // rt_lautstaerke_db verwenden
             );
         }
 

@@ -373,6 +373,10 @@
             function saveResult(heard) {
                 const frequency = frequencies[currentFrequencyIndex];
                 const testNumber = currentFrequencyIndex + 1;
+                const rt_lautstaerke_db = volumeSlider.value; // Lautstärke-Wert aus dem Schieberegler
+
+                console.log('Lautstärke-Wert (rt_lautstaerke_db):', rt_lautstaerke_db); // Debugging
+
 
                 if (currentTestId === null) {
                     currentTestId = Date.now();
@@ -384,6 +388,7 @@
                     frequency,
                     result: heard,
                     ear: selectedEar,
+                    rt_lautstaerke_db: rt_lautstaerke_db // Lautstärke-Wert hinzufügen
                 };
 
                 console.log('Sende Daten:', payload);
