@@ -351,6 +351,13 @@
         }, {});
     }
 
+    // Funktion zum Ein- und Ausblenden der Details
+    window.toggleDetails = function (testId) {
+                const detailsSection = document.getElementById(`details-${testId}`);
+                detailsSection.classList.toggle('active');
+            };
+
+
     // Diagramm aktualisieren
     function updateChart(tests) {
     if (chart) {
