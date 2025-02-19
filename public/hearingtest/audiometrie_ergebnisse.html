@@ -28,19 +28,18 @@
             overflow: hidden; /* Verhindert das Überlaufen des Inhalts */
         }
 
-
         .card-header.bg-primary.text-white {
             background-color: #866a67 !important; 
             color: white !important;
             margin-top:10px;
         }
 
-        .card{
+        .card {
             margin-top: 50px;
             margin-left: 10px;
             margin-right: 10px;
-
         }
+
         .card.results-card {
             display: flex;
             flex-direction: column;
@@ -58,26 +57,6 @@
             margin-top: -10px;
         }
     
-        .card.results-card .filter-section {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-            margin-left: 10px;
-            margin-right: 10px;
-        }
-    
-        .card.results-card .filter-section label,
-        .card.results-card .filter-section select,
-        .card.results-card .filter-section input {
-            width: 90%; /* Breitere Elemente, zentriert */
-            max-width: 300px;
-            margin-bottom: 10px;
-            margin-left: 10px;
-            margin-right: 10px;
-        }
-    
         .chart-container {
             width: 90%; /* Begrenze die Breite */
             max-width: 800px;
@@ -86,7 +65,7 @@
             margin-right: 10px;
             padding: 20px;
         }
-    
+
         #testList {
             width: 100%;
             max-width: 800px;
@@ -96,7 +75,7 @@
             list-style: none;
             padding: 0;
         }
-    
+
         #testList .result-card {
             margin-bottom: 10px;
             margin-left: 10px;
@@ -107,14 +86,14 @@
             background-color: #f8f8f8;
             text-align: center;
         }
-    
+
         #testList .result-card strong {
             font-size: 16px;
             color: #333;
             margin-left: 10px;
             margin-right: 10px;
         }
-    
+
         #testList .result-card .toggle-details {
             display: block;
             margin-top: 10px;
@@ -123,7 +102,7 @@
             color: #866a67;
             cursor: pointer;
         }
-    
+
         #testList .details-section {
             display: none;
             margin-top: 10px;
@@ -134,11 +113,11 @@
             margin-left: 10px;
             margin-right: 10px;
         }
-    
+
         #testList .details-section.active {
             display: block;
         }
-    
+
         #testList .test-detail {
             margin-bottom: 10px;
             padding: 10px;
@@ -146,21 +125,10 @@
             border-radius: 5px;
             text-align: left;
         }
-    
+
         #testList .test-detail p {
             margin: 5px 0;
             font-size: 14px;
-        }
-        /* Ändert die Farbe der Testqualität- und Datumsfelder */
-        .filter-section label {
-            color: #866a67 !important;
-            font-weight: bold;
-            margin-top: 30px;
-        }
-
-        .filter-section select,
-        .filter-section input {
-            border-color: #866a67 !important;
         }
 
     </style>
@@ -225,221 +193,167 @@
     <div class="container">
         <h2 class="text-center mb-4">Reintonaudiometrie-Test Ergebnisse</h2>
 
-
         <div class="row">
             <!-- Ergebnisse Card -->
             <div class="col-lg-12">
-    <div class="card results-card mb-4">
-        <div class="card-header1">Ihre Testergebnisse</div>
-        <!-- Filter-Sektion -->
-        <div class="filter-section">
-            <label for="filterQuality">Testqualität:</label>
-            <select id="filterQuality" class="form-select">
-                <option value="all">Alle</option>
-                <option value="good">Gute Tests (≥ 50%)</option>
-                <option value="bad">Schlechte Tests (< 50%)</option>
-            </select>
+                <div class="card results-card mb-4">
+                    <div class="card-header1">Ihre Testergebnisse</div>
+                    <!-- Diagramm-Sektion -->
+                    <div class="chart-container">
+                        <canvas id="resultsChart"></canvas>
+                    </div>
 
-            <label for="filterDate">Datum:</label>
-            <input type="date" id="filterDate" class="form-control">
-        </div>
-
-        <!-- Diagramm-Sektion -->
-        <div class="chart-container">
-            <canvas id="resultsChart"></canvas>
-        </div>
-
-        <!-- Ergebnisse -->
-        <div class="card">
-            <div class="card-header bg-primary text-white"'>Ihre Tests</div>
-            <div class="card-body">
-                <ul id="testList" class="result-list">
-                    <!-- Ergebnisse werden dynamisch geladen -->
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
+                    <!-- Ergebnisse -->
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">Ihre Tests</div>
+                        <div class="card-body">
+                            <ul id="testList" class="result-list">
+                                <!-- Ergebnisse werden dynamisch geladen -->
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        
     </div>
-
-       
-    
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    const testList = document.getElementById('testList');
-    const filterQuality = document.getElementById('filterQuality');
-    const filterDate = document.getElementById('filterDate');
-    const ctx = document.getElementById('resultsChart').getContext('2d');
+            const testList = document.getElementById('testList');
+            const ctx = document.getElementById('resultsChart').getContext('2d');
 
-    let allTests = [];
-    let chart;
+            let allTests = [];
+            let chart;
 
-    // Funktion zum Filtern der Ergebnisse
-    function filterResults() {
-        const selectedQuality = filterQuality.value;
-        const selectedDate = filterDate.value;
+            // Ergebnisse anzeigen
+            function displayResults(tests) {
+                testList.innerHTML = '';
 
-        const filteredTests = allTests.filter(test => {
-            const qualityMatch = selectedQuality === 'all' ||
-                (selectedQuality === 'good' && test.quality === 'good') ||
-                (selectedQuality === 'bad' && test.quality === 'bad');
-            const dateMatch = !selectedDate || new Date(test.rt_datum).toISOString().split('T')[0] === selectedDate;
-            return qualityMatch && dateMatch;
-        });
+                if (tests.length === 0) {
+                    testList.innerHTML = '<li class="list-group-item">Keine Testergebnisse verfügbar.</li>';
+                } else {
+                    // Sortiere die Tests nach Datum und Uhrzeit (neueste zuerst)
+                    const sortedTests = tests.sort((a, b) =>
+                        new Date(b.rt_datum + ' ' + b.rt_startzeit) - new Date(a.rt_datum + ' ' + a.rt_startzeit)
+                    );
+                    const groupedTests = groupByTestId(sortedTests);
 
-        displayResults(filteredTests);
-        updateChart(filteredTests);
-    }
+                    let testCounter = Object.keys(groupedTests).length; // Höchste Nummer für neuesten Test
 
+                    Object.keys(groupedTests).forEach(testId => {
+                        const testGroup = groupedTests[testId];
+                        const listItem = document.createElement('li');
+                        listItem.className = 'list-group-item result-card';
 
-    // Ergebnisse anzeigen
-    function displayResults(tests) {
-    testList.innerHTML = '';
+                        // Hole Startzeit und Endzeit
+                        const endzeit = new Date(testGroup[0].rt_endzeit);
+                        const startzeit = new Date(testGroup[testGroup.length - 1].rt_startzeit);
 
-    if (tests.length === 0) {
-        testList.innerHTML = '<li class="list-group-item">Keine Testergebnisse verfügbar.</li>';
-    } else {
-        // Sortiere die Tests nach Datum und Uhrzeit (neueste zuerst)
-        const sortedTests = tests.sort((a, b) =>
-            new Date(b.rt_datum + ' ' + b.rt_startzeit) - new Date(a.rt_datum + ' ' + a.rt_startzeit)
-        );
-        const groupedTests = groupByTestId(sortedTests);
-
-        let testCounter = Object.keys(groupedTests).length; // Höchste Nummer für neuesten Test
-
-        Object.keys(groupedTests).forEach(testId => {
-            const testGroup = groupedTests[testId];
-            const listItem = document.createElement('li');
-            listItem.className = 'list-group-item result-card';
-
-            // Hole Startzeit und Endzeit
-            const endzeit = new Date(testGroup[0].rt_endzeit);
-            const startzeit = new Date(testGroup[testGroup.length - 1].rt_startzeit);
-
-            listItem.innerHTML = `
-                <strong>Test ${testCounter}:</strong> ${new Date(testGroup[0].rt_datum).toLocaleDateString()} <br>
-                <strong>Startzeit:</strong> ${startzeit.toLocaleTimeString()}<br>
-                <strong>Endzeit:</strong> ${endzeit.toLocaleTimeString()}<br>
-                <strong>Testqualität:</strong> ${testGroup[0].quality === 'good' ? 'Gut (≥ 50%)' : 'Schlecht (< 50%)'} <br>
-                <span class="toggle-details" onclick="toggleDetails('${testId}')">Details anzeigen</span>
-                <div id="details-${testId}" class="details-section">
-                    ${testGroup.map(test => `
-                        <div class="test-detail">
-                            <p><strong>Frequenz:</strong> ${test.rt_frequenz} Hz</p>
-                            <p><strong>Ohr:</strong> ${test.rt_ohr}</p>
-                            <p><strong>Lautstärke:</strong> ${test.rt_lautstaerke_db} dB</p>
-                            <p><strong>Gehört:</strong> ${test.rt_gehoert ? 'Ja' : 'Nein'}</p>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            testList.appendChild(listItem);
-            testCounter--; // Nächster Test bekommt die nächstniedrigere Nummer
-        });
-    }
-}
-
-    // Funktion zum Gruppieren der Tests nach Test-ID
-    function groupByTestId(tests) {
-        return tests.reduce((acc, test) => {
-            if (!acc[test.rt_test_id]) {
-                acc[test.rt_test_id] = [];
+                        listItem.innerHTML = `
+                            <strong>Test ${testCounter}:</strong> ${new Date(testGroup[0].rt_datum).toLocaleDateString()} <br>
+                            <strong>Startzeit:</strong> ${startzeit.toLocaleTimeString()}<br>
+                            <strong>Endzeit:</strong> ${endzeit.toLocaleTimeString()}<br>
+                            <span class="toggle-details" onclick="toggleDetails('${testId}')">Details anzeigen</span>
+                            <div id="details-${testId}" class="details-section">
+                                ${testGroup.map(test => `
+                                    <div class="test-detail">
+                                        <p><strong>Frequenz:</strong> ${test.rt_frequenz} Hz</p>
+                                        <p><strong>Ohr:</strong> ${test.rt_ohr}</p>
+                                        <p><strong>Lautstärke:</strong> ${test.rt_lautstaerke_db} dB</p>
+                                        <p><strong>Gehört:</strong> ${test.rt_gehoert ? 'Ja' : 'Nein'}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                        testList.appendChild(listItem);
+                        testCounter--; // Nächster Test bekommt die nächstniedrigere Nummer
+                    });
+                }
             }
-            acc[test.rt_test_id].push(test);
-            return acc;
-        }, {});
-    }
 
-    // Funktion zum Ein- und Ausblenden der Details
-    window.toggleDetails = function (testId) {
+            // Funktion zum Gruppieren der Tests nach Test-ID
+            function groupByTestId(tests) {
+                return tests.reduce((acc, test) => {
+                    if (!acc[test.rt_test_id]) {
+                        acc[test.rt_test_id] = [];
+                    }
+                    acc[test.rt_test_id].push(test);
+                    return acc;
+                }, {});
+            }
+
+            // Funktion zum Ein- und Ausblenden der Details
+            window.toggleDetails = function (testId) {
                 const detailsSection = document.getElementById(`details-${testId}`);
                 detailsSection.classList.toggle('active');
             };
 
+            // Diagramm aktualisieren
+            function updateChart(tests) {
+                if (chart) {
+                    chart.destroy(); // Altes Diagramm löschen
+                }
 
-    // Diagramm aktualisieren
-    function updateChart(tests) {
-    if (chart) {
-        chart.destroy(); // Altes Diagramm löschen
-    }
+                const frequencies = [125, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000, 8000, 10000, 12000, 14000];
+                const groupedTests = groupByTestId(tests);
 
-    const frequencies = [125, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000, 8000, 10000, 12000, 14000];
-    const groupedTests = groupByTestId(tests);
+                let testCounter = Object.keys(groupedTests).length; // Höchste Nummer für neuesten Test
 
-    let testCounter = Object.keys(groupedTests).length; // Höchste Nummer für neuesten Test
+                const datasets = Object.keys(groupedTests).map(testId => {
+                    const testGroup = groupedTests[testId];
+                    const data = frequencies.map(freq => {
+                        const test = testGroup.find(t => t.rt_frequenz === freq);
+                        return test ? (test.rt_gehoert ? 1 : 0) : null;
+                    });
 
-    const datasets = Object.keys(groupedTests).map(testId => {
-        const testGroup = groupedTests[testId];
-        const data = frequencies.map(freq => {
-            const test = testGroup.find(t => t.rt_frequenz === freq);
-            return test ? (test.rt_gehoert ? 1 : 0) : null;
-        });
+                    const dataset = {
+                        label: `Test ${testCounter}`, // Korrekte Nummerierung im Diagramm
+                        data: data,
+                        borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // Zufällige Farbe
+                        fill: false,
+                    };
 
-        const dataset = {
-            label: `Test ${testCounter}`, // Korrekte Nummerierung im Diagramm
-            data: data,
-            borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // Zufällige Farbe
-            fill: false,
-        };
+                    testCounter--; // Nächster Test bekommt die nächstniedrigere Nummer
+                    return dataset;
+                });
 
-        testCounter--; // Nächster Test bekommt die nächstniedrigere Nummer
-        return dataset;
-    });
-
-    chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: frequencies,
-            datasets: datasets,
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1,
-                        callback: function (value) {
-                            return value === 1 ? 'Gehört' : 'Nicht gehört';
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: frequencies,
+                        datasets: datasets,
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: function (value) {
+                                        return value === 1 ? 'Gehört' : 'Nicht gehört';
+                                    }
+                                }
+                            }
                         }
                     }
-                }
+                });
             }
-        }
-    });
-}
 
+            // Ergebnisse vom Server abrufen
+            fetch('/getAudiometrieTests') // Hier die URL zu deiner API oder Datenbank einfügen
+                .then(response => {
+                    if (!response.ok) throw new Error('Fehler beim Abrufen der Testergebnisse');
+                    return response.json();
+                })
+                .then(tests => {
+                    displayResults(tests);
+                    updateChart(tests);
+                })
+                .catch(error => console.error('Fehler:', error));
 
-    // Ergebnisse vom Server abrufen
-    fetch('/getAudiometrieTests') // Hier die URL zu deiner API oder Datenbank einfügen
-        .then(response => {
-            if (!response.ok) throw new Error('Fehler beim Abrufen der Testergebnisse');
-            return response.json();
-        })
-        .then(tests => {
-            // Berechne die Testqualität für jeden Test
-            const groupedTests = groupByTestId(tests);
-            allTests = Object.keys(groupedTests).flatMap(testId => {
-                const testGroup = groupedTests[testId];
-                const heardCount = testGroup.filter(test => test.rt_gehoert).length;
-                const quality = (heardCount / testGroup.length) >= 0.5 ? 'good' : 'bad';
-                return testGroup.map(test => ({ ...test, quality }));
-            });
-            filterResults();
-        })
-        .catch(error => console.error('Fehler:', error));
-
-    // Filter-Event-Listener
-    filterQuality.addEventListener('change', filterResults);
-    filterDate.addEventListener('change', filterResults);
-});
+        });
 
     </script>
 </body>
