@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('API check-speech-in-noise-test:', data);
             if (data.alert) {
                 createNotification(
-                    'Ihr letztes Speech-in-Noise-Ergebnis liegt unter 50%. Bitte buchen Sie einen Termin für eine Überprüfung.',
+                    'Ihr letzter Speech-in-Noise Test liegt unter 50%. Bitte buchen Sie einen Termin für eine Überprüfung.',
                     '/booking.html',
                     'speech_in_noise_test'
                 );
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('API check-speech-in-noise-test2:', data);
             if (data.alert) {
                 createNotification(
-                    'Ihre letzten 2 Speech-in-Noise-Ergebnisse liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.',
+                    'Ihre letzten 2 Speech-in-Noise Tests liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.',
                     '/booking.html',
                     'speech_in_noise_test2'
                 );
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('API check-seven-days-no-test:', data);
             if (data.alert) {
                 createNotification(
-                    'Es ist Zeit für einen neuen Test. Der letzte Test war vor mehr als 7 Tagen.',
+                    'Es ist Zeit für einen neuen Speech-in-Noise Test. Der letzte Test war vor mehr als 7 Tagen.',
                     '/hearingtest/sin.html',
                     'seven_days_no_test'
                 );
@@ -122,22 +122,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
 
         let displayedNotifications = new Set();
-
-    fetch('/api/check-two-reintonaudiometrie-tests-under-100')
-        .then(response => response.json())
-        .then(data => {
-            console.log('API check-two-reintonaudiometrie-tests-under-100:', data);
-            if (data.alert && !displayedNotifications.has('two_reintonaudiometrie_tests_under_100')) {
-                createNotification(
-                    data.message,
-                    '/booking.html',
-                    'two_reintonaudiometrie_tests_under_100'
-                );
-                displayedNotifications.add('two_reintonaudiometrie_tests_under_100');
-            }
-        })
-        .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
-
 
     
     // Badge-Zähler initial aktualisieren

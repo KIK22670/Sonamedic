@@ -117,6 +117,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+        // Falsche Farben ersetzen
+document.querySelectorAll(".fa-thumbs-up").forEach(el => el.style.color = "#28a745"); // Grün
+document.querySelectorAll(".fa-meh-blank").forEach(el => el.style.color = "#fd7e14"); // Orange
+document.querySelectorAll(".fa-thumbs-down").forEach(el => el.style.color = "#dc3545"); // Rot
+
             const testList = document.getElementById('testList');
             const ctx = document.getElementById('sinResultsChart').getContext('2d');
     
@@ -231,6 +236,7 @@
                     testList.innerHTML = '<div class="col-12 text-center">Fehler beim Laden der Ergebnisse. Bitte versuchen Sie es später erneut.</div>';
                 });
         });
+        
     </script>
     
 </body>
