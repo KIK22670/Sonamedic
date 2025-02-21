@@ -129,6 +129,33 @@
         #prevFrequencyButton i:hover {
             color: #705a55;
         }
+
+        /* Test-Cancel-Link */
+        .test-cancel-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .cancel-test-link {
+            font-size: 16px;
+            font-weight: bold;
+            color: #FF5733; /* Auffällige Farbe */
+            text-decoration: none;
+            background-color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 2px solid #FF5733;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-test-link:hover {
+            background-color: #FF5733;
+            color: #fff;
+            border-color: #FF5733;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(255, 87, 51, 0.2);
+        }
+
     </style>
 </head>
 
@@ -175,11 +202,11 @@
                     <li>6. Wählen Sie das Ohr, mit dem Sie beginnen möchten:</li>
                 </ul>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="earSelection" id="leftEar" value="left">
+                    <input class="form-check-input" type="radio" name="earSelection" id="leftEar" value="links">
                     <label class="form-check-label" for="leftEar">Linkes Ohr</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="earSelection" id="rightEar" value="right">
+                    <input class="form-check-input" type="radio" name="earSelection" id="rightEar" value="rechts">
                     <label class="form-check-label" for="rightEar">Rechtes Ohr</label>
                 </div>
                 <div class="form-check">
@@ -187,6 +214,9 @@
                     <label class="form-check-label" for="binaural">Beide Ohren (binaural)</label>
                 </div>
                 <button class="btn btn-primary mt-3" id="startTestButton">Zum Test</button>
+                <div class="test-cancel-link">
+                    <a href="../stammdaten.html" class="cancel-test-link">Ich möchte den Test nicht machen</a>
+                </div>
             </div>
 
             <div class="test-section">
@@ -237,7 +267,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             const frequencies = [125, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000, 8000, 10000, 12000, 14000];
             let currentFrequencyIndex = 0;
-            const allEars = ["left", "right", "binaural"];
+            const allEars = ["links", "rechts", "binaural"];
             let selectedEar = null;
             let earOrder = [];
 
@@ -340,7 +370,7 @@
 
             function setAudioChannel(ear) {
                 if (!panner || !panner.pan) return;
-                panner.pan.value = ear === "left" ? -1 : ear === "right" ? 1 : 0;
+                panner.pan.value = ear === "links" ? -1 : ear === "rechts" ? 1 : 0;
             }
 
             volumeSlider.addEventListener('input', function () {
