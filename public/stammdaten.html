@@ -16,7 +16,7 @@
 
 <body>
     <script src="notification.js"></script>
- 
+
     <!-- Navbar Start -->
     <div class="container-fluid sticky-top bg-white shadow-sm">
         <div class="container">
@@ -41,36 +41,35 @@
     <!-- Navbar End -->
 
     <!-- Linke Navbar Start -->
-<nav class="navbar left-navbar">
-    <div class="container">
-        <div class="navbar-nav">
-            <a href="notification.html" class="nav-item nav-link">
-                <i class="fas fa-bell"></i> Nachrichten
-                <span id="notificationBadge" class="badge bg-danger ms-2" style="display: none;"></span>
-            </a>
-            <a href="stammdaten.html" class="nav-item nav-link">
-                <i class="bi bi-person-badge"></i> Stammdaten
-            </a>
-            <a href="hearingtest/overview.html" class="nav-item nav-link">
-                <i class="fas fa-headset"></i> Hörtests
-            </a>
-            <a href="hearingtest/ergebnisse.html" class="nav-item nav-link">
-                <i class="fas fa-chart-line"></i> Ergebnisse
-            </a>
-            <a href="booking.html" class="nav-item nav-link">
-                <i class="bi bi-calendar-plus"></i> Buchung
-            </a>
-            <a href="booking-overview.html" class="nav-item nav-link">
-                <i class="bi bi-calendar-check"></i> Übersicht
-            </a>
-            <a href="information.html" class="nav-item nav-link">
-                <i class="fas fa-info-circle"></i> Informationen
-            </a>
+    <nav class="navbar left-navbar">
+        <div class="container">
+            <div class="navbar-nav">
+                <a href="notification.html" class="nav-item nav-link">
+                    <i class="fas fa-bell"></i> Nachrichten
+                    <span id="notificationBadge" class="badge bg-danger ms-2" style="display: none;"></span>
+                </a>
+                <a href="stammdaten.html" class="nav-item nav-link">
+                    <i class="bi bi-person-badge"></i> Stammdaten
+                </a>
+                <a href="hearingtest/overview.html" class="nav-item nav-link">
+                    <i class="fas fa-headset"></i> Hörtests
+                </a>
+                <a href="hearingtest/ergebnisse.html" class="nav-item nav-link">
+                    <i class="fas fa-chart-line"></i> Ergebnisse
+                </a>
+                <a href="booking.html" class="nav-item nav-link">
+                    <i class="bi bi-calendar-plus"></i> Buchung
+                </a>
+                <a href="booking-overview.html" class="nav-item nav-link">
+                    <i class="bi bi-calendar-check"></i> Übersicht
+                </a>
+                <a href="information.html" class="nav-item nav-link">
+                    <i class="fas fa-info-circle"></i> Informationen
+                </a>
+            </div>
         </div>
-    </div>
-</nav>
-<!-- Linke Navbar End -->
-
+    </nav>
+    <!-- Linke Navbar End -->
 
     <!-- Stammdaten Formular -->
     <div class="container mt-5" style="max-width: 800px;">
@@ -79,28 +78,28 @@
             <div class="card-body">
                 <form id="stammdatenForm">
                     <div class="mb-3">
-                        <label for="p_vorname" class="form-label">Vorname:</label>
-                        <input type="text" class="form-control" id="p_vorname" name="p_vorname">
+                        <label for="p_vorname" class="form-label">Vorname: <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="p_vorname" name="p_vorname" required>
                     </div>
                     <div class="mb-3">
-                        <label for="p_nachname" class="form-label">Nachname:</label>
-                        <input type="text" class="form-control" id="p_nachname" name="p_nachname">
+                        <label for="p_nachname" class="form-label">Nachname: <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="p_nachname" name="p_nachname" required>
                     </div>
                     <div class="mb-3">
-                        <label for="p_email" class="form-label">E-Mail:</label>
-                        <input type="email" class="form-control" id="p_email" name="p_email">
+                        <label for="p_email" class="form-label">E-Mail: <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="p_email" name="p_email" required>
                     </div>
                     <div class="mb-3">
-                        <label for="p_telefonnummer" class="form-label">Telefonnummer:</label>
-                        <input type="tel" class="form-control" id="p_telefonnummer" name="p_telefonnummer">
+                        <label for="p_telefonnummer" class="form-label">Telefonnummer: <span class="text-danger">*</span></label>
+                        <input type="tel" class="form-control" id="p_telefonnummer" name="p_telefonnummer" required>
                     </div>
                     <div class="mb-3">
-                        <label for="p_geburtsdatum" class="form-label">Geburtsdatum:</label>
-                        <input type="date" class="form-control" id="p_geburtsdatum" name="p_geburtsdatum">
+                        <label for="p_geburtsdatum" class="form-label">Geburtsdatum: <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="p_geburtsdatum" name="p_geburtsdatum" required>
                     </div>
                     <div class="mb-3">
-                        <label for="p_svnr" class="form-label">SVNR:</label>
-                        <input type="text" class="form-control" id="p_svnr" name="p_svnr" maxlength="10">
+                        <label for="p_svnr" class="form-label">SVNR: <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="p_svnr" name="p_svnr" maxlength="10" required>
                     </div>
                     <div class="mb-3">
                         <label for="p_allergien" class="form-label">Allergien:</label>
@@ -115,6 +114,11 @@
                         <textarea class="form-control" id="p_medikamente" name="p_medikamente" rows="2"></textarea>
                     </div>
 
+                    <!-- Hinweis zu Pflichtfeldern -->
+                    <div class="mb-3">
+                        <small class="text-muted"><span class="text-danger">*</span> Pflichtfelder</small>
+                    </div>
+
                     <!-- Buttons -->
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-primary" id="editButton">Bearbeiten</button>
@@ -126,175 +130,133 @@
     </div>
 
     <!-- Modals -->
-    <div class="modal fade" id="incompleteDataModal" tabindex="-1" aria-labelledby="incompleteDataModalLabel" aria-hidden="true">
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="incompleteDataModalLabel">Unvollständige Stammdaten</h5>
+                    <h5 class="modal-title" id="errorModalLabel">Fehler</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    Bitte füllen Sie Ihre Stammdaten vollständig aus, bevor Sie fortfahren.
+                <div class="modal-body" id="errorModalBody">
+                    <!-- Fehlermeldung wird hier eingefügt -->
                 </div>
-               
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
+                </div>
             </div>
         </div>
     </div>
-  
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Geburtsdatum maximal vor 18 Jahren setzen
-        const dateInput = document.getElementById('p_geburtsdatum');
-        const today = new Date();
-        const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-        dateInput.max = minDate.toISOString().split('T')[0];
-    
-        console.log('DOM ist geladen.');
-    });
-    
-    window.onload = () => {
-        console.log('Alle Ressourcen sind geladen, Stammdaten werden geladen...');
-        ladeStammdaten();
-    };
-    
-    function ladeStammdaten() {
-        console.log('Lade Stammdaten...');
-        fetch('/ladeStammdaten')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.stammdaten) {
-                    console.log('Stammdaten erfolgreich geladen.');
-                    const stammdaten = JSON.parse(data.stammdaten);
-                    Object.keys(stammdaten).forEach(key => {
-                        const input = document.getElementById(`p_${key}`);
-                        if (input) {
-                            input.value = stammdaten[key];
-                        }
-                    });
-                    prüfeStammdaten();  // Stammdaten erst prüfen, nachdem sie geladen wurden
-                } else {
-                    console.warn('Keine Stammdaten gefunden.');
-                    showModal('Ihre Stammdaten sind unvollständig. Bitte füllen Sie das Formular aus.');
-                    toggleEditMode(true);
-                    blockiereNavigationBeiUnvollständigenStammdaten(true);  // Blockiere Navigation direkt hier, wenn keine Stammdaten vorhanden sind
-                }
-            })
-            .catch(error => {
-                console.error('Fehler beim Laden der Stammdaten:', error);
-                showModal('Ein unerwarteter Fehler ist aufgetreten.');
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Geburtsdatum maximal vor 18 Jahren setzen
+            const dateInput = document.getElementById('p_geburtsdatum');
+            const today = new Date();
+            const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            dateInput.max = minDate.toISOString().split('T')[0];
+
+            console.log('DOM ist geladen.');
+        });
+
+        function validateForm() {
+            const svnr = document.getElementById('p_svnr').value;
+            const geburtsdatum = document.getElementById('p_geburtsdatum').value;
+            const telefonnummer = document.getElementById('p_telefonnummer').value;
+            const email = document.getElementById('p_email').value;
+
+            // SVNR validieren (nur Zahlen, genau 10 Zeichen)
+            if (!/^\d{10}$/.test(svnr)) {
+                showErrorModal('Die SVNR muss genau 10 Zahlen enthalten.');
+                return false;
+            }
+
+            // Geburtsdatum validieren (nicht in der Zukunft und mindestens 18 Jahre alt)
+            const geburtsdatumDate = new Date(geburtsdatum);
+            const today = new Date();
+            const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+
+            if (geburtsdatumDate > today) {
+                showErrorModal('Das Geburtsdatum darf nicht in der Zukunft liegen.');
+                return false;
+            }
+            if (geburtsdatumDate > minDate) {
+                showErrorModal('Sie müssen mindestens 18 Jahre alt sein.');
+                return false;
+            }
+
+            // Telefonnummer validieren (nur Zahlen)
+            if (!/^\d+$/.test(telefonnummer)) {
+                showErrorModal('Die Telefonnummer darf nur Zahlen enthalten.');
+                return false;
+            }
+
+            // E-Mail validieren
+            if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+                showErrorModal('Bitte geben Sie eine gültige E-Mail-Adresse ein.');
+                return false;
+            }
+
+            return true;
+        }
+
+        function stammdatenSpeichern() {
+            if (!validateForm()) {
+                return; // Formular nicht speichern, wenn Validierung fehlschlägt
+            }
+
+            const formData = {};
+            ['vorname', 'nachname', 'email', 'telefonnummer', 'geburtsdatum', 'svnr', 'allergien', 'vorerkrankungen', 'medikamente'].forEach(id => {
+                formData[id] = document.getElementById(`p_${id}`).value;
             });
-    }
-    
-    function prüfeStammdaten() {
-        console.log('Prüfe, ob die Stammdaten vollständig sind...');
-        const stammdatenGefüllt = istFormularVollständig();
-        if (stammdatenGefüllt) {
-            console.log('Stammdaten sind vollständig.');
-            toggleEditMode(false);
-            localStorage.setItem('stammdatenGefüllt', 'true');
-            blockiereNavigationBeiUnvollständigenStammdaten(false);  // Navigation aktivieren, wenn die Daten vollständig sind
-        } else {
-            console.log('Stammdaten sind unvollständig.');
-            showModal('Bitte füllen Sie alle Felder aus.', 'Unvollständige Stammdaten');
+
+            console.log('Sende Stammdaten zum Speichern:', formData);
+
+            fetch('/speichereStammdaten', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Stammdaten erfolgreich gespeichert.');
+                        showErrorModal('Ihre Stammdaten wurden erfolgreich gespeichert.', 'Erfolg');
+                        toggleEditMode(false);
+                    } else {
+                        console.error('Fehler beim Speichern der Stammdaten.');
+                        showErrorModal('Fehler beim Speichern der Stammdaten.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Unerwarteter Fehler beim Speichern:', error);
+                    showErrorModal('Ein unerwarteter Fehler ist aufgetreten.');
+                });
+        }
+
+        function showErrorModal(message, title = 'Fehler') {
+            const modalBody = document.getElementById('errorModalBody');
+            const modalTitle = document.getElementById('errorModalLabel');
+            modalTitle.textContent = title;
+            modalBody.textContent = message;
+            const modal = new bootstrap.Modal(document.getElementById('errorModal'));
+            modal.show();
+        }
+
+        function toggleEditMode(editMode) {
+            document.getElementById('editButton').classList.toggle('d-none', editMode);
+            document.getElementById('saveButton').classList.toggle('d-none', !editMode);
+            document.querySelectorAll('#stammdatenForm input, #stammdatenForm textarea').forEach(el => el.readOnly = !editMode);
+        }
+
+        document.getElementById('editButton').addEventListener('click', () => {
             toggleEditMode(true);
-            localStorage.setItem('stammdatenGefüllt', 'false');
-            blockiereNavigationBeiUnvollständigenStammdaten(true);  // Navigation blockieren bei unvollständigen Stammdaten
-        }
-    }
-    
-    function stammdatenSpeichern() {
-        if (!istFormularVollständig()) {
-            console.warn('Formular ist unvollständig, Stammdaten werden nicht gespeichert.');
-            showModal('Bitte füllen Sie alle Felder aus.');
-            return;
-        }
-    
-        const formData = {};
-        ['vorname', 'nachname', 'email', 'telefonnummer', 'geburtsdatum', 'svnr', 'allergien', 'vorerkrankungen', 'medikamente'].forEach(id => {
-            formData[id] = document.getElementById(`p_${id}`).value;
         });
-    
-        console.log('Sende Stammdaten zum Speichern:', formData);
-    
-        fetch('/speichereStammdaten', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Stammdaten erfolgreich gespeichert.');
-                localStorage.setItem('stammdatenGefüllt', 'true');
-                toggleEditMode(false);
-                showModal('Ihre Stammdaten wurden erfolgreich gespeichert.', 'Stammdaten gespeichert');
-                blockiereNavigationBeiUnvollständigenStammdaten(false);  // Sicherstellen, dass Links bei vollständigen Daten wieder aktiviert sind
-            } else {
-                console.error('Fehler beim Speichern der Stammdaten.');
-                showModal('Fehler beim Speichern der Stammdaten.');
-            }
-        })
-        .catch(error => {
-            console.error('Unerwarteter Fehler beim Speichern:', error);
-            showModal('Ein unerwarteter Fehler ist aufgetreten.');
-        });
-    }
-    
-    function toggleEditMode(editMode) {
-        console.log(`Wechsel in den ${editMode ? 'Bearbeitungsmodus' : 'Anzeigemodus'}.`);
-        document.getElementById('editButton').classList.toggle('d-none', editMode);
-        document.getElementById('saveButton').classList.toggle('d-none', !editMode);
-        document.querySelectorAll('#stammdatenForm input, #stammdatenForm textarea').forEach(el => el.readOnly = !editMode);
-    }
-    
-    function blockiereNavigationBeiUnvollständigenStammdaten(block) {
-        const navItems = document.querySelectorAll('.left-navbar .nav-item');
-    
-        navItems.forEach(navItem => {
-            if (block) {
-                // Blockiert Navigation bei unvollständigen Stammdaten
-                navItem.style.pointerEvents = 'none';  // Deaktiviert den Klick
-                navItem.classList.add('disabled');     // Optional: fügt eine Klasse für visuelle Deaktivierung hinzu
-            } else {
-                // Ermöglicht Navigation bei vollständigen Stammdaten
-                navItem.style.pointerEvents = 'auto';  // Reaktiviert den Klick
-                navItem.classList.remove('disabled');
-            }
-        });
-    }
-    
-    function istFormularVollständig() {
-        const fields = ['p_vorname', 'p_nachname', 'p_email', 'p_telefonnummer', 'p_geburtsdatum', 'p_svnr'];
-        const isComplete = fields.every(id => document.getElementById(id).value.trim() !== '');
-        console.log(`Formular vollständig: ${isComplete}`);
-        return isComplete;
-    }
-    
-    function showModal(message, title = 'Hinweis') {
-        const modalTitle = document.querySelector('#incompleteDataModal .modal-title');
-        const modalBody = document.querySelector('#incompleteDataModal .modal-body');
-        modalTitle.textContent = title;
-        modalBody.textContent = message;
-    
-        console.log(`Zeige Modal: ${title} - ${message}`);
-        const modalInstance = new bootstrap.Modal(document.getElementById('incompleteDataModal'));
-        modalInstance.show();
-    }
-    
-    document.getElementById('editButton').addEventListener('click', () => {
-        console.log('Wechsle in den Bearbeitungsmodus...');
-        toggleEditMode(true);
-    });
-    
     </script>
-    
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 
-<!-- JavaScript Libraries -->
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-</body>
-
-</html
+</html>
