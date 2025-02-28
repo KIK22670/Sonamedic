@@ -1,29 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
-    <!-- Meta-Tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Datenschutz</title>
-
-    <!-- Home-Seite Header -->
-    <!-- Hier werden die Style- und Icon-Bibliotheken von der Home-Seite wiederverwendet -->
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/stylelogin.css">
     <link rel="stylesheet" href="css/stylehome.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
 
+        .datenschutz-container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            margin: 80px auto;
+        }
+
+        h2 {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .icon {
+            font-size: 50px;
+            color: #9a9385;
+            margin-bottom: 20px;
+        }
+
+        .btn-link {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer Abstand */
+        .container-fluid.text-light.border-top {
+            margin-top: 210px;
+        }
+    </style>
 </head>
 
 <body>
-     <!-- Navbar Start -->
-     <div class="container-fluid sticky-top bg-white shadow-sm">
+    <!-- Navbar Start -->
+    <div class="container-fluid sticky-top bg-white shadow-sm">
         <div class="container">
             <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
                 <a href="home.html" class="navbar-brand">
@@ -44,66 +83,33 @@
         </div>
     </div>
     <!-- Navbar End -->
-     
-    </div>
 
-    <!-- Datenschutz -->
-    <div class="container mt-5">
+    <!-- Datenschutz Hinweis -->
+    <div class="datenschutz-container">
+        <i class="fas fa-shield-alt icon"></i>
         <h2>Datenschutzerklärung</h2>
-        <p>Herzlich willkommen auf unserer Website! Ihr Vertrauen ist uns wichtig, und wir möchten Sie über den Umgang mit Ihren persönlichen Daten informieren. Bitte nehmen Sie sich einen Moment Zeit, um die folgenden Informationen zu lesen:</p>
-
-        <h3>1. Verantwortliche Stelle</h3>
-        <p>Verantwortliche Stelle im Sinne der Datenschutzgesetze ist:</p>
-        <p>Projekt SonaMedic <br> Jannat Farooqi <br> Spengergasse 20, 1050 Wien</p>
-        <p>Weitere Verantwortliche sind: <br> Aleksandra Kikic <br> Irina Kostrba <br> Luka Radojicic</p>
-
-        <h3>2. Erhebung und Verarbeitung personenbezogener Daten</h3>
-        <p>Wir erheben und verarbeiten personenbezogene Daten nur, soweit dies für die Bereitstellung unserer Dienstleistungen und die Abwicklung Ihrer Anfragen erforderlich ist. Die Verarbeitung erfolgt gemäß den gesetzlichen Bestimmungen.</p>
-
-        <h3>3. Datenerfassung auf unserer Website</h3>
-        <h4>Cookies</h4>
-        <p>Unsere Website verwendet Cookies, um die Nutzung unserer Seite zu verbessern. Cookies sind kleine Textdateien, die auf Ihrem Endgerät gespeichert werden. Sie richten keinen Schaden an und enthalten keine Viren. Durch die Nutzung unserer Website stimmen Sie der Verwendung von Cookies zu.</p>
-
-        <h4>Google Analytics</h4>
-        <p>Wir nutzen Google Analytics, einen Webanalysedienst der Google LLC. Google Analytics verwendet Cookies, um die Nutzung der Website zu analysieren. Die durch den Cookie erzeugten Informationen über Ihre Nutzung der Website (einschließlich Ihrer IP-Adresse) werden an einen Server von Google in den USA übertragen und dort gespeichert.</p>
-
-        <h3>4. Weitergabe von Daten</h3>
-        <p>Wir geben Ihre personenbezogenen Daten nicht ohne Ihre ausdrückliche Einwilligung an Dritte weiter, es sei denn, wir sind gesetzlich dazu verpflichtet oder es ist zur Vertragserfüllung erforderlich.</p>
-
-        <h3>5. Sicherheit</h3>
-        <p>Wir treffen technische und organisatorische Sicherheitsmaßnahmen, um Ihre Daten gegen unbeabsichtigte oder unrechtmäßige Manipulation, Verlust, Zerstörung oder gegen den Zugriff unberechtigter Personen zu schützen.</p>
-
-        <h3>6. Ihre Rechte</h3>
-        <p>Sie haben das Recht, Auskunft über Ihre bei uns gespeicherten personenbezogenen Daten zu erhalten, sowie das Recht auf Berichtigung, Löschung oder Sperrung dieser Daten. Bei Fragen zur Verarbeitung Ihrer persönlichen Daten oder zum Thema Datenschutz stehen wir Ihnen gerne zur Verfügung.</p>
-
-        <h3>7. Änderungen der Datenschutzerklärung</h3>
-        <p>Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen. Die aktuelle Version ist stets auf unserer Website verfügbar.</p>
-
-        <p>Bitte beachten Sie, dass diese Datenschutzerklärung allgemeiner Natur ist und möglicherweise nicht alle individuellen Anwendungen und Praxisbesonderheiten abdeckt. Im Zweifelsfall kontaktieren Sie uns bitte direkt.</p>
+        <p>Die Datenschutzerklärung finden Sie auf der Website unseres Auftraggebers.</p>
+        <a href="https://edlinger-hno.at/datenschutz" class="btn-link" target="_blank">Zur Datenschutzerklärung</a>
     </div>
-
 
     <!-- Footer Start -->
-   <div class="container-fluid text-light border-top border-secondary py-4" style="background-color: #9a9385;">
-    <div class="container">
-        <div class="row g-5">
-            <div class="col-md-6 text-center text-md-start">
-                <p class="mb-md-0" style="color: #ffffff;">&copy; <a class="text-light" href="#">SonaMedic</a>. All
-                    Rights Reserved.</p>
-            </div>
-            <div class="col-md-6 text-center text-md-end">
-                <a href="impressum.html" style="margin-right: 10px; color: #ffffff;">Impressum</a>
-                <a href="datenschutz.html" style="color: #ffffff;">Datenschutz</a>
+    <div class="container-fluid text-light border-top border-secondary py-4" style="background-color: #9a9385;">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-md-0" style="color: #ffffff;">&copy; <a class="text-light" href="#">SonaMedic</a>. All Rights Reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="impressum.html" style="margin-right: 10px; color: #ffffff;">Impressum</a>
+                    <a href="datenschutz.html" style="color: #ffffff;">Datenschutz</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Footer End -->
+    <!-- Footer End -->
 
-    <!-- JavaScript-Bibliotheken -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-    <script src="js/main.js"></script>
-
+    <!-- Font Awesome für das Icon -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/js/all.min.js"></script>
 </body>
+
+</html>
